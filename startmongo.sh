@@ -28,6 +28,11 @@ if [[ "$MODE" == "shard" ]]; then
     replicationName="shardA"
 fi
 
+if [[ "$MODE" == "mongos" ]]; then
+    conffile="mongos.conf"
+    replicationName="mongos"
+fi
+
 
 if [ ! -z "$REPLICATION_NAME" ]; then
     replicationName=$REPLICATION_NAME
@@ -47,12 +52,12 @@ mkdir /data/logs
 mkdir /data/db
 
 echo $conf
-sed -i "s/_repl_Set_Name_/${replicationName}/g" $conf
-
-echo "----------------------"
 echo $key
 
-echo "----------------------"
-#cat $conf
+if [[ "$MODE" == "mongos" ]]; then
+    mongos --configdb $CONFIGDB -f $conf $key
+else
+    sed -i "s/_repl_Set_Name_/${replicationName}/g" $conf
 
-mongod -f $conf $key
+    mongod -f $conf $key
+fi
