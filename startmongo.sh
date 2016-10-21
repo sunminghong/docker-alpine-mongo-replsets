@@ -43,6 +43,9 @@ if [ -f "/data/$conffile" ]; then
     conf="/data/$conffile"
 fi
 
+mkdir /data/logs
+mkdir /data/db
+
 echo $conf
 sed -i "s/_repl_Set_Name_/${replicationName}/g" $conf
 
